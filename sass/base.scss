@@ -1,0 +1,50 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #333;
+  background: linear-gradient(-45deg, #333333 0%, #31363b 100%);
+}
+
+#content {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+
+  svg {
+    display: block;
+    height: 90%;
+
+    #svg-bg {
+      fill: url(#Gradient1);
+      stroke-width: 0;
+    }
+
+    * {
+      fill: #000;
+      stroke: #fff;
+      stroke-width: 0.03;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    #svg-outline {
+      * {
+        fill: none;
+        stroke: #63686e;
+      }
+    }
+  }
+}
+
+.stop1 {
+  stop-color: #e6a44f;
+}
+.stop2 {
+  stop-color: #fff9e8;
+}

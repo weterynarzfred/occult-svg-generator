@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/cash-dom@6.0.2/dist/cash.min.js"></script>
+    <link rel="stylesheet" href="css/base.css" />
+  </head>
+  <body>
+    <div id="content">
+      <svg viewBox="-1.5 -1.5 3 3">
+        <defs>
+          <linearGradient id="Gradient1" x1="0" x2="1" y1="0" y2="1">
+            <stop class="stop1" offset="0%" />
+            <stop class="stop2" offset="100%" />
+          </linearGradient>
+        </defs>
+        <filter id="svg-filter">
+          <feGaussianBlur
+            in="SourceGraphic"
+            result="blur"
+            stdDeviation="0.004"
+          />
+          <!-- <feOffset in="blur" dx="0.01" dy="0.01" /> -->
+        </filter>
+        <mask id="svg-mask">
+          <g></g>
+        </mask>
+        <g id="svg-outline" filter="url(#svg-filter)"></g>
+        <rect
+          x="-1.5"
+          y="-1.5"
+          width="3"
+          height="3"
+          id="svg-bg"
+          mask="url(#svg-mask)"
+        />
+      </svg>
+    </div>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
