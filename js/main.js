@@ -17,17 +17,24 @@ function rndFloat(min, max) {
 function line(_opt) {
   const opt = {
     strokeWidth: 1,
+    invert: false,
     ..._opt,
   };
 
-  $(document.createElementNS("http://www.w3.org/2000/svg", "line"))
+  const element = $(document.createElementNS("http://www.w3.org/2000/svg", "line"))
     .attr({ x1: opt.x1, y1: opt.y1, x2: opt.x2, y2: opt.y2 }).css({
       strokeWidth: opt.strokeWidth * 0.03,
     }).appendTo(svg);
 
+  if (opt.invert) {
+    element.addClass('invert').css({
+      strokeWidth: opt.strokeWidth * 0.03 + 0.03,
+    });
+  }
+
   $(document.createElementNS("http://www.w3.org/2000/svg", "line"))
     .attr({ x1: opt.x1, y1: opt.y1, x2: opt.x2, y2: opt.y2 }).css({
-      strokeWidth: Math.max(opt.strokeWidth * 0.03 + outline, 0.01),
+      strokeWidth: Math.max(opt.strokeWidth * 0.03 - 0.01, 0.01),
     }).appendTo(svg2);
 }
 
@@ -36,10 +43,11 @@ function circle(_opt) {
     cx: 0,
     cy: 0,
     strokeWidth: 1,
+    invert: false,
     ..._opt,
   };
 
-  $(document.createElementNS("http://www.w3.org/2000/svg", "circle"))
+  const element = $(document.createElementNS("http://www.w3.org/2000/svg", "circle"))
     .attr({
       r: opt.r,
       cx: opt.cx,
@@ -48,13 +56,19 @@ function circle(_opt) {
       strokeWidth: opt.strokeWidth * 0.03,
     }).appendTo(svg);
 
+  if (opt.invert) {
+    element.addClass('invert').css({
+      strokeWidth: opt.strokeWidth * 0.03 + 0.03,
+    });
+  }
+
   $(document.createElementNS("http://www.w3.org/2000/svg", "circle"))
     .attr({
       r: opt.r,
       cx: opt.cx,
       cy: opt.cy,
     }).css({
-      strokeWidth: Math.max(opt.strokeWidth * 0.03 + outline, 0.01),
+      strokeWidth: Math.max(opt.strokeWidth * 0.03 - 0.01, 0.01),
     }).appendTo(svg2);
 }
 
@@ -76,6 +90,7 @@ function star(_opt) {
       x2: posX(next / opt.n, opt.rotate) * opt.r + opt.cx,
       y2: posY(next / opt.n, opt.rotate) * opt.r + opt.cy,
       strokeWidth: opt.strokeWidth,
+      invert: opt.invert,
     });
   }
 }
@@ -97,36 +112,77 @@ function place(_opt) {
 }
 
 function randomCircle(_opt = {}) {
-  const opt = {
-    r: rndFloat(0.5, 1),
+  const r = rndFloat(0.5, 1);
+  const strokeWidth = rndFloat(0.2, 1.5);
+
+  circle({
+    r,
     cx: 0,
     cy: 0,
-    strokeWidth: rndFloat(0.2, 1.5),
+    strokeWidth,
+    invert: true,
     ..._opt,
-  };
+  });
 
-  circle(opt);
+  circle({
+    r,
+    cx: 0,
+    cy: 0,
+    strokeWidth,
+    ..._opt,
+  });
 }
 
 function randomStar() {
   const n = rndInt(2, 8);
+  const r = rndFloat(0.5, 1);
+  const jmp = rndInt(1, Math.floor(n / 2));
+  const rotate = rndInt(0, 3) / n / 2;
+  const strokeWidth = rndFloat(0.2, 1.5);
+
   star({
     n,
-    r: rndFloat(0.5, 1),
-    jmp: rndInt(1, Math.floor(n / 2)),
-    rotate: rndInt(0, 3) / n / 2,
-    strokeWidth: rndFloat(0.2, 1.5),
+    r,
+    jmp,
+    rotate,
+    strokeWidth,
+    invert: true,
+  });
+
+  star({
+    n,
+    r,
+    jmp,
+    rotate,
+    strokeWidth,
   });
 }
 
 function randomDots() {
   const n = rndInt(1, 6);
+  const r = rndFloat(0.5, 1);
+  const shapeR = rndFloat(0.1, 0.5);
+  const rotate = rndInt(0, 3) / n / 2;
+
   place({
-    n: n,
-    r: rndFloat(0.5, 1),
+    n,
+    r,
     shape: randomCircle,
-    shapeOpt: { r: rndFloat(0.1, 0.5) },
-    rotate: rndInt(0, 3) / n / 2,
+    shapeOpt: {
+      r: shapeR,
+      invert: true,
+    },
+    rotate,
+  });
+
+  place({
+    n,
+    r,
+    shape: randomCircle,
+    shapeOpt: {
+      r: shapeR,
+    },
+    rotate,
   });
 }
 
@@ -144,7 +200,6 @@ function newShape() {
 
 const svg = $('svg #svg-mask g');
 const svg2 = $('svg g#svg-outline');
-const outline = -0.01;
 
 newShape();
 window.addEventListener('click', newShape);
